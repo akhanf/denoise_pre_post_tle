@@ -1,0 +1,64 @@
+from snakebids import bids
+
+configfile: 'config/config.yml'
+
+
+
+
+def get_final_targets(site):
+    return expand(bids(root='results/{prepost}',subject='{subject}',site='{site}',task='{task}',denoise='{denoise}',space='{space}',fwhm='{fwhm}',atlas='{atlas}',suffix='conn.txt'),\
+            subject=config['subjects'][site],
+            task='rest',
+            denoise=config['denoise'].keys(),
+            fwhm='5',
+            space='MNI152NLin2009cAsym',
+            site=site,
+            prepost=['preop','postop'],
+            atlas='schaefer')
+
+
+rule all:
+    input:
+        targets_ge = get_final_targets('ge'),
+        targets_siemens = get_final_targets('siemens')
+
+
+
+
+def get_bold_nii(wildcards):
+    return config['preproc_bold'][wildcards.prepost][wildcards.site]
+
+def get_bold_json(wildcards):
+    return config['preproc_bold_json'][wildcards.prepost][wildcards.site]
+
+
+rule resample_bold_preop:
+    input:
+        bold = get_bold_nii,
+        ref = 'resources/tpl-{space}_res-02_T1w.nii.gz',
+
+    output:
+        bold = bids(root='results/{prepost,preop}',subject='{subject}',site='{site}',task='{task}',space='{space}',desc='resampled',suffix='bold.nii.gz')
+    shell:
+        'antsApplyTransforms -d 3 -e 3 -i {input.bold} -o {output.bold} -r {input.ref}'
+
+rule resample_bold_postop:
+    input:
+        bold = get_bold_nii,
+        ref = 'resources/tpl-{space}_res-02_T1w.nii.gz',
+        rigid_post_to_pre = config['rigid_post_to_pre'],
+        warp_post_to_pre = config['warp_post_to_pre'],
+        warp_pre_to_mni = config['warp_pre_to_mni'],
+    output:
+        bold = bids(root='results/{prepost,postop}',subject='{subject}',site='{site}',task='{task}',space='{space}',desc='resampled',suffix='bold.nii.gz')
+    shell:
+        'antsApplyTransforms -d 3 -e 3 -i {input.bold} -o {output.bold} -r {input.ref} '
+        '-t {input.rigid_post_to_pre} '
+        '-t {input.warp_post_to_pre} '
+        '-t {input.warp_pre_to_mni}'
+
+
+
+include: 'rules/interimfmri.smk'
+
+
