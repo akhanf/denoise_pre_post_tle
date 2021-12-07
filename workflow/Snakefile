@@ -31,6 +31,10 @@ def get_bold_nii(wildcards):
 def get_bold_json(wildcards):
     return config['preproc_bold_json'][wildcards.prepost][wildcards.site]
 
+def get_mask_nii(wildcards):
+    return config['preproc_mask'][wildcards.prepost][wildcards.site]
+
+
 
 rule resample_bold_preop:
     input:
@@ -56,6 +60,35 @@ rule resample_bold_postop:
         '-t {input.rigid_post_to_pre} '
         '-t {input.warp_post_to_pre} '
         '-t {input.warp_pre_to_mni}'
+
+rule resample_mask_preop:
+    input:
+        mask = get_mask_nii,
+        ref = 'resources/tpl-{space}_res-02_T1w.nii.gz',
+
+    output:
+        mask = bids(root='results/{prepost,preop}',subject='{subject}',site='{site}',task='{task}',space='{space}',desc='resampled',suffix='mask.nii.gz')
+    shell:
+        'antsApplyTransforms -d 3 -e 0 -i {input.mask} -o {output.mask} -r {input.ref} '
+        '-n NearestNeighbor '
+
+
+rule resample_mask_postop:
+    input:
+        mask = get_mask_nii,
+        ref = 'resources/tpl-{space}_res-02_T1w.nii.gz',
+        rigid_post_to_pre = config['rigid_post_to_pre'],
+        warp_post_to_pre = config['warp_post_to_pre'],
+        warp_pre_to_mni = config['warp_pre_to_mni'],
+    output:
+        mask = bids(root='results/{prepost,postop}',subject='{subject}',site='{site}',task='{task}',space='{space}',desc='resampled',suffix='mask.nii.gz')
+    shell:
+        'antsApplyTransforms -d 3 -e 0 -i {input.mask} -o {output.mask} -r {input.ref} '
+        '-n NearestNeighbor '
+        '-t {input.rigid_post_to_pre} '
+        '-t {input.warp_post_to_pre} '
+        '-t {input.warp_pre_to_mni}'
+
 
 
 

@@ -23,7 +23,8 @@ rule denoise:
         nii = bids(root='results/{prepost}',subject='{subject}',site='{site}',task='{task}',space='{space}',desc='resampled',suffix='bold.nii.gz'),
         json = get_bold_json,
         confounds_tsv = lambda wildcards: config['preproc_confounds'][wildcards.prepost][wildcards.site],
-        mask_nii = lambda wildcards: config['preproc_mask'][wildcards.prepost][wildcards.site],
+        #use preop mask regardless of whether postop or preop (since will be resampled to preop space)
+        mask_nii = bids(root='results/preop',subject='{subject}',site='{site}',task='{task}',space='{space}',desc='resampled',suffix='mask.nii.gz')
     params:
         denoise_params = lambda wildcards: config['denoise'][wildcards.denoise],
     output: 
