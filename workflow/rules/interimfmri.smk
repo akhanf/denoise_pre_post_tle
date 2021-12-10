@@ -64,7 +64,7 @@ rule schaefer_connectivity:
 rule schaefer_network:
     """ Uses the Schaefer connectivity and 7-network labels to construct 14x14 network connectivity matrices, by averaging values across the network parcels """
     input:
-        conn_txt = bids(root='results/{prepost}',site='{site}',subject='{subject}',task='{task}',denoise='{denoise}',space='{space}',fwhm='{fwhm}',atlas='{atlas,schaefer}',suffix='conn.txt'),
+        conn_txt = bids(root='results/{prepost}',site='{site}',subject='{subject}',task='{task}',denoise='{denoise}',space='{space}',fwhm='{fwhm}',atlas='{atlas}',suffix='conn.txt'),
         network_txt = 'resources/schaefer_2018/Schaefer2018_300Parcels_7Networks_order.txt' #this should be downloaded when the prev rule is first run
     group: 'subj'
     output:

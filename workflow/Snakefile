@@ -6,7 +6,7 @@ configfile: 'config/config.yml'
 
 
 def get_final_targets(site):
-    return expand(bids(root='results/{prepost}',subject='{subject}',site='{site}',task='{task}',denoise='{denoise}',space='{space}',fwhm='{fwhm}',atlas='{atlas}',network='Yeo7',suffix='conn.txt'),\
+    func_targets = expand(bids(root='results/{prepost}',subject='{subject}',site='{site}',task='{task}',denoise='{denoise}',space='{space}',fwhm='{fwhm}',atlas='{atlas}',network='Yeo7',suffix='conn.txt'),\
             subject=config['subjects'][site],
             task='rest',
             denoise=config['denoise'].keys(),
@@ -15,12 +15,20 @@ def get_final_targets(site):
             site=site,
             prepost=['preop','postop'],
             atlas='schaefer')
+    anat_targets = expand(bids(root='results/{prepost}',subject='{subject}',site='{site}',from_='{space}',space='T1w',desc='schaefer',suffix='dseg.nii.gz'),
+                    subject=config['subjects'][site],
+                    space='MNI152NLin2009cAsym',
+                    site=site,
+                    prepost=['preop','postop'])
+    return func_targets + anat_targets
 
 
 rule all:
     input:
         targets_ge = get_final_targets('ge'),
-        targets_siemens = get_final_targets('siemens')
+        targets_siemens = get_final_targets('siemens'),
+
+
 
 
 
@@ -96,6 +104,39 @@ rule resample_mask_postop:
         '-t {input.rigid_post_to_pre} '
         '-t {input.warp_post_to_pre} '
         '-t {input.warp_pre_to_mni}'
+
+
+rule warp_atlas_to_preop_t1:
+    input:
+        atlas = 'resources/schaefer_2018/Schaefer2018_300Parcels_7Networks_order_FSLMNI152_1mm.nii.gz',
+        warp_mni_to_pre = config['warp_mni_to_pre'],
+        ref = config['preproc_t1']
+    output: 
+        atlas = bids(root='results/{prepost,preop}',subject='{subject}',site='{site}',from_='{space}',space='T1w',desc='schaefer',suffix='dseg.nii.gz')
+    container: config['ants_container']
+    group: 'subj'
+    shell:
+        'antsApplyTransforms -d 3 -e 0 -i {input.atlas} -o {output.atlas} -r {input.ref} '
+        '-n NearestNeighbor '
+        '-t {input.warp_mni_to_pre}'
+
+rule warp_atlas_to_postop_t1:
+    input:
+        atlas = 'resources/schaefer_2018/Schaefer2018_300Parcels_7Networks_order_FSLMNI152_1mm.nii.gz',
+        warp_mni_to_pre = config['warp_mni_to_pre'],
+        warp_pre_to_post = config['warp_pre_to_post'],
+        rigid_post_to_pre = config['rigid_post_to_pre'],
+        ref = config['preproc_t1']
+    output: 
+        atlas = bids(root='results/{prepost,postop}',subject='{subject}',site='{site}',from_='{space}',space='T1w',desc='schaefer',suffix='dseg.nii.gz')
+    container: config['ants_container']
+    group: 'subj'
+    shell:
+        'antsApplyTransforms -d 3 -e 0 -i {input.atlas} -o {output.atlas} -r {input.ref} '
+        '-n NearestNeighbor '
+        '-t {input.warp_mni_to_pre}'
+        '-t {input.warp_pre_to_post}'
+        '-t [{input.rigid_post_to_pre},1]'
 
 
 

@@ -19,7 +19,7 @@ subjects:
     - P054
     - P058
 
-
+preproc_t1: '../epi_{prepost}_{site}/fmriprep_20.1.1/fmriprep/sub-{subject}/anat/sub-{subject}_desc-preproc_T1w.nii.gz'
 
 preproc_bold:
   preop:
@@ -60,8 +60,10 @@ preproc_confounds:
 
 
 warp_pre_to_mni: '../epi_preop_{site}/fmriprep_20.1.1/fmriprep/sub-{subject}/anat/sub-{subject}_from-T1w_to-{space}_mode-image_xfm.h5'
+warp_mni_to_pre: '../epi_preop_{site}/fmriprep_20.1.1/fmriprep/sub-{subject}/anat/sub-{subject}_from-{space}_to-T1w_mode-image_xfm.h5'
 rigid_post_to_pre: '../epi_preop_{site}/resection_masks/sub-{subject}/sub-{subject}_from-postop_to-preop_desc-rigid_xfm.txt'
 warp_post_to_pre: '../epi_preop_{site}/resection_masks/sub-{subject}/warp.nii.gz'
+warp_pre_to_post: '../epi_preop_{site}/resection_masks/sub-{subject}/inverse_warp.nii.gz'
 
 
 
