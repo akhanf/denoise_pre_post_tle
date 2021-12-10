@@ -134,8 +134,8 @@ rule warp_atlas_to_postop_t1:
     shell:
         'antsApplyTransforms -d 3 -e 0 -i {input.atlas} -o {output.atlas} -r {input.ref} '
         '-n NearestNeighbor '
-        '-t {input.warp_mni_to_pre}'
-        '-t {input.warp_pre_to_post}'
+        '-t {input.warp_mni_to_pre} '
+        '-t {input.warp_pre_to_post} '
         '-t [{input.rigid_post_to_pre},1]'
 
 
