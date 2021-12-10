@@ -21,30 +21,31 @@ subjects:
 
 preproc_t1: '../epi_{prepost}_{site}/fmriprep_20.1.1/fmriprep/sub-{subject}/anat/sub-{subject}_desc-preproc_T1w.nii.gz'
 
+#this now is set to be T1w space bold
 preproc_bold:
   preop:
-    siemens: '../epi_preop_siemens/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_run-1_space-{space}_desc-preproc_bold.nii.gz'
-    ge: '../epi_preop_ge/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_space-{space}_desc-preproc_bold.nii.gz'
+    siemens: '../epi_preop_siemens/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_run-1_space-T1w_desc-preproc_bold.nii.gz'
+    ge: '../epi_preop_ge/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_space-T1w_desc-preproc_bold.nii.gz'
   postop:
-    siemens: '../epi_postop_siemens/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_space-{space}_desc-preproc_bold.nii.gz'
-    ge: '../epi_postop_ge/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_run-1_space-{space}_desc-preproc_bold.nii.gz'
+    siemens: '../epi_postop_siemens/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_space-T1w_desc-preproc_bold.nii.gz'
+    ge: '../epi_postop_ge/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_run-1_space-T1w_desc-preproc_bold.nii.gz'
 
 preproc_bold_json:
   preop:
-    siemens: '../epi_preop_siemens/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_run-1_space-{space}_desc-preproc_bold.json'
-    ge: '../epi_preop_ge/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_space-{space}_desc-preproc_bold.json'
+    siemens: '../epi_preop_siemens/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_run-1_space-T1w_desc-preproc_bold.json'
+    ge: '../epi_preop_ge/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_space-T1w_desc-preproc_bold.json'
   postop:
-    siemens: '../epi_postop_siemens/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_space-{space}_desc-preproc_bold.json'
-    ge: '../epi_postop_ge/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_run-1_space-{space}_desc-preproc_bold.json'
+    siemens: '../epi_postop_siemens/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_space-T1w_desc-preproc_bold.json'
+    ge: '../epi_postop_ge/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_run-1_space-T1w_desc-preproc_bold.json'
 
 
 preproc_mask:
   preop:
-    siemens: '../epi_preop_siemens/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_run-1_space-{space}_desc-brain_mask.nii.gz'
-    ge: '../epi_preop_ge/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_space-{space}_desc-brain_mask.nii.gz'
+    siemens: '../epi_preop_siemens/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_run-1_space-T1w_desc-brain_mask.nii.gz'
+    ge: '../epi_preop_ge/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_space-T1w_desc-brain_mask.nii.gz'
   postop:
-    siemens: '../epi_postop_siemens/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_space-{space}_desc-brain_mask.nii.gz'
-    ge: '../epi_postop_ge/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_run-1_space-{space}_desc-brain_mask.nii.gz'
+    siemens: '../epi_postop_siemens/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_space-T1w_desc-brain_mask.nii.gz'
+    ge: '../epi_postop_ge/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_run-1_space-T1w_desc-brain_mask.nii.gz'
 
 
 

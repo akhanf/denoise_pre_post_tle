@@ -46,15 +46,17 @@ def get_mask_nii(wildcards):
 
 rule resample_bold_preop:
     input:
-        bold = get_bold_nii,
+        bold = get_bold_nii, 
         ref = 'resources/tpl-{space}_res-02_T1w.nii.gz',
-
+        warp_pre_to_mni = config['warp_pre_to_mni'],
     output:
         bold = bids(root='results/{prepost,preop}',subject='{subject}',site='{site}',task='{task}',space='{space}',desc='resampled',suffix='bold.nii.gz')
     container: config['ants_container']
     group: 'subj'
     shell:
-        'antsApplyTransforms -d 3 -e 3 -i {input.bold} -o {output.bold} -r {input.ref}'
+        'antsApplyTransforms -d 3 -e 3 -i {input.bold} -o {output.bold} -r {input.ref} '
+        '-t {input.warp_pre_to_mni} '
+
 
 rule resample_bold_postop:
     input:
@@ -69,9 +71,9 @@ rule resample_bold_postop:
     container: config['ants_container']
     shell:
         'antsApplyTransforms -d 3 -e 3 -i {input.bold} -o {output.bold} -r {input.ref} '
-        '-t {input.rigid_post_to_pre} '
+        '-t {input.warp_pre_to_mni} '
         '-t {input.warp_post_to_pre} '
-        '-t {input.warp_pre_to_mni}'
+        '-t {input.rigid_post_to_pre} '
 
 rule resample_mask_preop:
     input:
@@ -85,6 +87,7 @@ rule resample_mask_preop:
     shell:
         'antsApplyTransforms -d 3 -e 0 -i {input.mask} -o {output.mask} -r {input.ref} '
         '-n NearestNeighbor '
+        '-t {input.warp_pre_to_mni} '
 
 
 rule resample_mask_postop:
@@ -101,9 +104,9 @@ rule resample_mask_postop:
     shell:
         'antsApplyTransforms -d 3 -e 0 -i {input.mask} -o {output.mask} -r {input.ref} '
         '-n NearestNeighbor '
-        '-t {input.rigid_post_to_pre} '
+ 	    '-t {input.warp_pre_to_mni} '
         '-t {input.warp_post_to_pre} '
-        '-t {input.warp_pre_to_mni}'
+        '-t {input.rigid_post_to_pre} '
 
 
 rule warp_atlas_to_preop_t1:
@@ -134,9 +137,10 @@ rule warp_atlas_to_postop_t1:
     shell:
         'antsApplyTransforms -d 3 -e 0 -i {input.atlas} -o {output.atlas} -r {input.ref} '
         '-n NearestNeighbor '
-        '-t {input.warp_mni_to_pre} '
+        '-t [{input.rigid_post_to_pre},1] '
         '-t {input.warp_pre_to_post} '
-        '-t [{input.rigid_post_to_pre},1]'
+        '-t {input.warp_mni_to_pre} '
+
 
 
 
