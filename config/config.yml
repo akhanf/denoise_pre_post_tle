@@ -85,4 +85,5 @@ denoise:
       - steady_state_outlier
 
 
+ants_container: /project/6050199/akhanf/singularity/bids-apps/khanlab_neuroglia-core_latest.sif
 
