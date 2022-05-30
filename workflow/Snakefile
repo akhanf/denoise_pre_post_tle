@@ -4,22 +4,17 @@ configfile: 'config/config.yml'
 
 
 
-
-def get_final_targets(site):
-    func_targets = expand(bids(root='results/{prepost}',subject='{subject}',site='{site}',task='{task}',denoise='{denoise}',space='{space}',fwhm='{fwhm}',atlas='{atlas}',network='Yeo7',suffix='conn.txt'),\
-            subject=config['subjects'][site],
+def get_final_targets:
+    func_targets = expand(bids(root='results',subject='{subject}',task='{task}',denoise='{denoise}',space='{space}',fwhm='{fwhm}',atlas='{atlas}',network='Yeo7',suffix='conn.txt'),\
+            subject=config['subjects'],
             task='rest',
             denoise=config['denoise'].keys(),
             fwhm='5',
             space='MNI152NLin2009cAsym',
-            site=site,
-            prepost=['preop','postop'],
             atlas='schaefer')
-    anat_targets = expand(bids(root='results/{prepost}',subject='{subject}',site='{site}',from_='{space}',space='T1w',desc='schaefer',suffix='dseg.nii.gz'),
-                    subject=config['subjects'][site],
-                    space='MNI152NLin2009cAsym',
-                    site=site,
-                    prepost=['preop','postop'])
+    anat_targets = expand(bids(root='results',subject='{subject}',from_='{space}',space='T1w',desc='schaefer',suffix='dseg.nii.gz'),
+                    subject=config['subjects'],
+                    space='MNI152NLin2009cAsym')
     return func_targets + anat_targets
 
 
@@ -34,13 +29,13 @@ rule all:
 
 
 def get_bold_nii(wildcards):
-    return config['preproc_bold'][wildcards.prepost][wildcards.site]
+    return config['preproc_bold']
 
 def get_bold_json(wildcards):
-    return config['preproc_bold_json'][wildcards.prepost][wildcards.site]
+    return config['preproc_bold_json']
 
 def get_mask_nii(wildcards):
-    return config['preproc_mask'][wildcards.prepost][wildcards.site]
+    return config['preproc_mask']
 
 
 
@@ -50,7 +45,7 @@ rule resample_bold_preop:
         ref = 'resources/tpl-{space}_res-02_T1w.nii.gz',
         warp_pre_to_mni = config['warp_pre_to_mni'],
     output:
-        bold = bids(root='results/{prepost,preop}',subject='{subject}',site='{site}',task='{task}',space='{space}',desc='resampled',suffix='bold.nii.gz')
+        bold = bids(root='results',subject='{subject}',task='{task}',space='{space}',desc='resampled',suffix='bold.nii.gz')
     container: config['ants_container']
     group: 'subj'
     shell:
@@ -58,22 +53,6 @@ rule resample_bold_preop:
         '-t {input.warp_pre_to_mni} '
 
 
-rule resample_bold_postop:
-    input:
-        bold = get_bold_nii,
-        ref = 'resources/tpl-{space}_res-02_T1w.nii.gz',
-        rigid_post_to_pre = config['rigid_post_to_pre'],
-        warp_post_to_pre = config['warp_post_to_pre'],
-        warp_pre_to_mni = config['warp_pre_to_mni'],
-    group: 'subj'
-    output:
-        bold = bids(root='results/{prepost,postop}',subject='{subject}',site='{site}',task='{task}',space='{space}',desc='resampled',suffix='bold.nii.gz')
-    container: config['ants_container']
-    shell:
-        'antsApplyTransforms -d 3 -e 3 -i {input.bold} -o {output.bold} -r {input.ref} '
-        '-t {input.warp_pre_to_mni} '
-        '-t {input.warp_post_to_pre} '
-        '-t {input.rigid_post_to_pre} '
 
 rule resample_mask_preop:
     input:
@@ -90,24 +69,6 @@ rule resample_mask_preop:
         '-t {input.warp_pre_to_mni} '
 
 
-rule resample_mask_postop:
-    input:
-        mask = get_mask_nii,
-        ref = 'resources/tpl-{space}_res-02_T1w.nii.gz',
-        rigid_post_to_pre = config['rigid_post_to_pre'],
-        warp_post_to_pre = config['warp_post_to_pre'],
-        warp_pre_to_mni = config['warp_pre_to_mni'],
-    output:
-        mask = bids(root='results/{prepost,postop}',subject='{subject}',site='{site}',task='{task}',space='{space}',desc='resampled',suffix='mask.nii.gz')
-    container: config['ants_container']
-    group: 'subj'
-    shell:
-        'antsApplyTransforms -d 3 -e 0 -i {input.mask} -o {output.mask} -r {input.ref} '
-        '-n NearestNeighbor '
- 	    '-t {input.warp_pre_to_mni} '
-        '-t {input.warp_post_to_pre} '
-        '-t {input.rigid_post_to_pre} '
-
 
 rule warp_atlas_to_preop_t1:
     input:
@@ -115,33 +76,13 @@ rule warp_atlas_to_preop_t1:
         warp_mni_to_pre = config['warp_mni_to_pre'],
         ref = config['preproc_t1']
     output: 
-        atlas = bids(root='results/{prepost,preop}',subject='{subject}',site='{site}',from_='{space}',space='T1w',desc='schaefer',suffix='dseg.nii.gz')
+        atlas = bids(root='results',subject='{subject}',from_='{space}',space='T1w',desc='schaefer',suffix='dseg.nii.gz')
     container: config['ants_container']
     group: 'subj'
     shell:
         'antsApplyTransforms -d 3 -e 0 -i {input.atlas} -o {output.atlas} -r {input.ref} '
         '-n NearestNeighbor '
         '-t {input.warp_mni_to_pre}'
-
-rule warp_atlas_to_postop_t1:
-    input:
-        atlas = 'resources/schaefer_2018/Schaefer2018_300Parcels_7Networks_order_FSLMNI152_1mm.nii.gz',
-        warp_mni_to_pre = config['warp_mni_to_pre'],
-        warp_pre_to_post = config['warp_pre_to_post'],
-        rigid_post_to_pre = config['rigid_post_to_pre'],
-        ref = config['preproc_t1']
-    output: 
-        atlas = bids(root='results/{prepost,postop}',subject='{subject}',site='{site}',from_='{space}',space='T1w',desc='schaefer',suffix='dseg.nii.gz')
-    container: config['ants_container']
-    group: 'subj'
-    shell:
-        'antsApplyTransforms -d 3 -e 0 -i {input.atlas} -o {output.atlas} -r {input.ref} '
-        '-n NearestNeighbor '
-        '-t [{input.rigid_post_to_pre},1] '
-        '-t {input.warp_pre_to_post} '
-        '-t {input.warp_mni_to_pre} '
-
-
 
 
 

@@ -1,70 +1,33 @@
 
 subjects:
-  siemens:
-    - '0066'
-    - '0070'
-    - '0076'
-    - '0078'
-    - '0079'
-    - '0083'
-    - '0084'
-  ge:
-    - P034
-    - P035
-    - P037
-    - P041
-    - P045
-    - P046
-    - P051
-    - P054
-    - P058
+    - '001'
+    - '002'
+    - '004'
+    - '006'
+    - '007'
+    - '009'
+    - '012'
+    - '013'
+    - '015'
 
-preproc_t1: '../epi_{prepost}_{site}/fmriprep_20.1.1/fmriprep/sub-{subject}/anat/sub-{subject}_desc-preproc_T1w.nii.gz'
+preproc_t1: '../../fmriprep_20.2.6/sub-{subject}/anat/sub-{subject}_acq-MPRvNavAvgEcho12_run-1_desc-preproc_T1w.nii.gz'
 
 #this now is set to be T1w space bold
-preproc_bold:
-  preop:
-    siemens: '../epi_preop_siemens/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_run-1_space-T1w_desc-preproc_bold.nii.gz'
-    ge: '../epi_preop_ge/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_space-T1w_desc-preproc_bold.nii.gz'
-  postop:
-    siemens: '../epi_postop_siemens/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_space-T1w_desc-preproc_bold.nii.gz'
-    ge: '../epi_postop_ge/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_run-1_space-T1w_desc-preproc_bold.nii.gz'
+preproc_bold: '../../fmriprep_20.2.6/sub-{subject}/func/sub-{subject}_task-{task}_acq-AP_run-1_space-T1w_desc-preproc_bold.nii.gz'
 
-preproc_bold_json:
-  preop:
-    siemens: '../epi_preop_siemens/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_run-1_space-T1w_desc-preproc_bold.json'
-    ge: '../epi_preop_ge/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_space-T1w_desc-preproc_bold.json'
-  postop:
-    siemens: '../epi_postop_siemens/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_space-T1w_desc-preproc_bold.json'
-    ge: '../epi_postop_ge/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_run-1_space-T1w_desc-preproc_bold.json'
+preproc_bold_json: '../../fmriprep_20.2.6/sub-{subject}/func/sub-{subject}_task-{task}_acq-AP_run-1_space-T1w_desc-preproc_bold.json'
 
 
-preproc_mask:
-  preop:
-    siemens: '../epi_preop_siemens/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_run-1_space-T1w_desc-brain_mask.nii.gz'
-    ge: '../epi_preop_ge/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_space-T1w_desc-brain_mask.nii.gz'
-  postop:
-    siemens: '../epi_postop_siemens/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_space-T1w_desc-brain_mask.nii.gz'
-    ge: '../epi_postop_ge/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_run-1_space-T1w_desc-brain_mask.nii.gz'
+preproc_mask: '../../fmriprep_20.2.6/sub-{subject}/func/sub-{subject}_task-{task}_acq-AP_run-1_space-T1w_desc-brain_mask.nii.gz'
 
 
 
-
-preproc_confounds:
-  preop:
-    siemens: '../epi_preop_siemens/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_run-1_desc-confounds_regressors.tsv'
-    ge: '../epi_preop_ge/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_desc-confounds_regressors.tsv'
-  postop:
-    siemens: '../epi_postop_siemens/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_desc-confounds_regressors.tsv'
-    ge: '../epi_postop_ge/fmriprep_20.1.1/fmriprep/sub-{subject}/func/sub-{subject}_task-{task}_run-1_desc-confounds_regressors.tsv'
+preproc_confounds: '../../fmriprep_20.2.6/sub-{subject}/func/sub-{subject}_task-{task}_acq-AP_run-1_desc-confounds_timeseries.tsv'
 
 
 
-warp_pre_to_mni: '../epi_preop_{site}/fmriprep_20.1.1/fmriprep/sub-{subject}/anat/sub-{subject}_from-T1w_to-{space}_mode-image_xfm.h5'
-warp_mni_to_pre: '../epi_preop_{site}/fmriprep_20.1.1/fmriprep/sub-{subject}/anat/sub-{subject}_from-{space}_to-T1w_mode-image_xfm.h5'
-rigid_post_to_pre: '../epi_preop_{site}/resection_masks/sub-{subject}/sub-{subject}_from-postop_to-preop_desc-rigid_xfm.txt'
-warp_post_to_pre: '../epi_preop_{site}/resection_masks/sub-{subject}/warp.nii.gz'
-warp_pre_to_post: '../epi_preop_{site}/resection_masks/sub-{subject}/inverse_warp.nii.gz'
+warp_pre_to_mni: '../../fmriprep_20.2.6/sub-{subject}/anat/sub-{subject}_acq-MPRvNavAvgEcho12_run-1_from-T1w_to-{space}_mode-image_xfm.h5'
+warp_mni_to_pre: '../../fmriprep_20.2.6/sub-{subject}/anat/sub-{subject}_acq-MPRvNavAvgEcho12_run-1_from-{space}_to-T1w_mode-image_xfm.h5'
 
 
 
