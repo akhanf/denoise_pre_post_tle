@@ -3,41 +3,17 @@ from snakebids import bids
 configfile: 'config/config.yml'
 
 
-
-def get_final_targets:
-    func_targets = expand(bids(root='results',subject='{subject}',task='{task}',denoise='{denoise}',space='{space}',fwhm='{fwhm}',atlas='{atlas}',network='Yeo7',suffix='conn.txt'),\
+rule all:
+    input: 
+        expand(bids(root='results',subject='{subject}',task='{task}',denoise='{denoise}',space='{space}',fwhm='{fwhm}',atlas='{atlas}',network='Yeo7',suffix='conn.txt'),
             subject=config['subjects'],
             task='rest',
             denoise=config['denoise'].keys(),
             fwhm='5',
             space='MNI152NLin2009cAsym',
             atlas='schaefer')
-    anat_targets = expand(bids(root='results',subject='{subject}',from_='{space}',space='T1w',desc='schaefer',suffix='dseg.nii.gz'),
-                    subject=config['subjects'],
-                    space='MNI152NLin2009cAsym')
-    return func_targets + anat_targets
 
-
-rule all:
-    input:
-        targets_ge = get_final_targets('ge'),
-        targets_siemens = get_final_targets('siemens'),
-
-
-
-
-
-
-def get_bold_nii(wildcards):
-    return config['preproc_bold']
-
-def get_bold_json(wildcards):
-    return config['preproc_bold_json']
-
-def get_mask_nii(wildcards):
-    return config['preproc_mask']
-
-
+	    
 
 rule resample_bold_preop:
     input:

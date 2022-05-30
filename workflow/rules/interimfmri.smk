@@ -19,11 +19,11 @@ print(bids(root='results',subject='{subject}',task='{task}',denoise='{denoise}',
 
 rule denoise:
     input: 
-        nii = bids(root='results',subject='{subject}',site='{site}',task='{task}',space='{space}',desc='resampled',suffix='bold.nii.gz'),
-        json = get_bold_json,
-        confounds_tsv = lambda wildcards: config['preproc_confounds'],
+        nii = config['preproc_bold'],
+        json = config['preproc_bold_json'],
+        confounds_tsv = config['preproc_confounds'],
     output: 
-        nii = bids(root='results',subject='{subject},task='{task}',denoise='{denoise}',space='{space}',suffix='bold.nii.gz'),
+        nii = bids(root='results',subject='{subject}',task='{task}',denoise='{denoise}',space='{space}',suffix='bold.nii.gz'),
         json = bids(root='results',subject='{subject}',task='{task}',denoise='{denoise}',space='{space}',suffix='bold.json')
     group: 'subj'
     script: '../scripts/denoise.py'
