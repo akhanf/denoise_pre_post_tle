@@ -15,37 +15,6 @@ rule all:
 
 	    
 
-rule resample_bold_preop:
-    input:
-        bold = get_bold_nii, 
-        ref = 'resources/tpl-{space}_res-02_T1w.nii.gz',
-        warp_pre_to_mni = config['warp_pre_to_mni'],
-    output:
-        bold = bids(root='results',subject='{subject}',task='{task}',space='{space}',desc='resampled',suffix='bold.nii.gz')
-    container: config['ants_container']
-    group: 'subj'
-    shell:
-        'antsApplyTransforms -d 3 -e 3 -i {input.bold} -o {output.bold} -r {input.ref} '
-        '-t {input.warp_pre_to_mni} '
-
-
-
-rule resample_mask_preop:
-    input:
-        mask = get_mask_nii,
-        ref = 'resources/tpl-{space}_res-02_T1w.nii.gz',
-
-    output:
-        mask = bids(root='results/{prepost,preop}',subject='{subject}',site='{site}',task='{task}',space='{space}',desc='resampled',suffix='mask.nii.gz')
-    container: config['ants_container']
-    group: 'subj'
-    shell:
-        'antsApplyTransforms -d 3 -e 0 -i {input.mask} -o {output.mask} -r {input.ref} '
-        '-n NearestNeighbor '
-        '-t {input.warp_pre_to_mni} '
-
-
-
 rule warp_atlas_to_preop_t1:
     input:
         atlas = 'resources/schaefer_2018/Schaefer2018_300Parcels_7Networks_order_FSLMNI152_1mm.nii.gz',

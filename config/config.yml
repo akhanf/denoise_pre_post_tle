@@ -1,24 +1,25 @@
 
 subjects:
-    - '001'
-    - '002'
-    - '004'
-    - '006'
-    - '007'
-    - '009'
-    - '012'
-    - '013'
+#    - '001'
+#    - '002'
+#    - '004'
+#    - '006'
+#    - '007'
+#    - '009'
+#    - '012'
+#    - '013'
     - '015'
 
 preproc_t1: '../../fmriprep_20.2.6/sub-{subject}/anat/sub-{subject}_acq-MPRvNavAvgEcho12_run-1_desc-preproc_T1w.nii.gz'
 
 #this now is set to be T1w space bold
-preproc_bold: '../../fmriprep_20.2.6/sub-{subject}/func/sub-{subject}_task-{task}_acq-AP_run-1_space-T1w_desc-preproc_bold.nii.gz'
+preproc_bold: '../../fmriprep_20.2.6/sub-{subject}/func/sub-{subject}_task-{task}_acq-AP_run-1_space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz'
 
-preproc_bold_json: '../../fmriprep_20.2.6/sub-{subject}/func/sub-{subject}_task-{task}_acq-AP_run-1_space-T1w_desc-preproc_bold.json'
+preproc_bold_json: '../../fmriprep_20.2.6/sub-{subject}/func/sub-{subject}_task-{task}_acq-AP_run-1_space-MNI152NLin2009cAsym_desc-preproc_bold.json'
 
 
-preproc_mask: '../../fmriprep_20.2.6/sub-{subject}/func/sub-{subject}_task-{task}_acq-AP_run-1_space-T1w_desc-brain_mask.nii.gz'
+preproc_mask_bold: '../../fmriprep_20.2.6/sub-{subject}/func/sub-{subject}_task-{task}_acq-AP_run-1_space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz'
+preproc_mask_t1: '../../fmriprep_20.2.6/sub-{subject}/anat/sub-{subject}_acq-MPRvNavAvgEcho12_run-1_space-MNI152NLin2009cAsym_desc-brain_mask.nii.gz'
 
 
 

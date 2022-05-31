@@ -16,16 +16,31 @@ wildcard_constraints:
        
 print(bids(root='results',subject='{subject}',task='{task}',denoise='{denoise}',space='{space}',suffix='bold.json'))
 
+rule reslice_mask:
+    input: 
+        boldmask = config['preproc_mask_bold'],
+        t1mask = config['preproc_mask_t1']
+    output:
+        mask = bids(root='results',subject='{subject}',task='{task}',denoise='{denoise}',space='{space}',suffix='brain_mask.nii.gz')
+    shell:
+        'singularity exec /project/6050199/akhanf/singularity/khanlab_neuroglia-core_v1.3.0.img c3d {input.boldmask} {input.t1mask} -interpolation NearestNeighbor  -reslice-identity -o {output}'
+
 
 rule denoise:
     input: 
         nii = config['preproc_bold'],
         json = config['preproc_bold_json'],
         confounds_tsv = config['preproc_confounds'],
+	    mask_nii = rules.reslice_mask.output.mask
+    params:
+        denoise_params = lambda wildcards: config['denoise'][wildcards.denoise],
     output: 
         nii = bids(root='results',subject='{subject}',task='{task}',denoise='{denoise}',space='{space}',suffix='bold.nii.gz'),
         json = bids(root='results',subject='{subject}',task='{task}',denoise='{denoise}',space='{space}',suffix='bold.json')
     group: 'subj'
+    threads: 8
+    resources:
+        mem_mb='32000'
     script: '../scripts/denoise.py'
 
   
